@@ -31,15 +31,16 @@ CFLAGS := -Wall \
     -mcmodel=kernel \
     -target x86_64-unknown-none-elf \
 	-g \
-	-I $(STD_DIR)
+	-I $(STD_DIR) \
+	-I kernel
 
 
-OBJ_FILES :=  $(BUILD_DIR)/os/utils.asm.o \
-					$(BUILD_DIR)/os/os.c.o \
-					$(BUILD_DIR)/main.c.o \
-					$(BUILD_DIR)/os/keyboard.c.o \
-					$(BUILD_DIR)/os/pit.c.o \
-					$(BUILD_DIR)/os/pic.c.o \
+OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
+					$(BUILD_DIR)/kernel/main.c.o \
+					$(BUILD_DIR)/kernel/os/os.c.o \
+					$(BUILD_DIR)/kernel/keyboard/keyboard.c.o \
+					$(BUILD_DIR)/kernel/os/pit.c.o \
+					$(BUILD_DIR)/kernel/os/pic.c.o \
 					$(BUILD_DIR)/std/memory.c.o \
 
 
@@ -65,8 +66,13 @@ $(BUILD_DIR)/%.c.o: $(SOURCE_DIR)/%.c
 $(BOOT_FILES_DIR)/kernel: $(OBJ_FILES)
 	ld -T linker.lds $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 
 
+paths:
+	mkdir -p ./$(BUILD_DIR)/kernel/os
+	mkdir -p ./$(BUILD_DIR)/kernel/keyboard
+	mkdir -p ./$(BUILD_DIR)/std
+	mkdir -p ./$(BUILD_DIR)/games
 
-build: elf-image $(BOOT_FILES_DIR)/kernel
+build: paths elf-image $(BOOT_FILES_DIR)/kernel
 	mcopy -i $(ELF_OUTPUT_DIR)/efi-image $(BOOT_FILES_DIR)/kernel ::/
 
 
@@ -82,3 +88,6 @@ debug:
     -m 512M \
     -bios /usr/share/ovmf/OVMF.fd \
     -drive format=raw,file=$(ELF_OUTPUT_DIR)/efi-image -s -S
+
+clean:
+	@rm -rf $(BUILD_DIR)

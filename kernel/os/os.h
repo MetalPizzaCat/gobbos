@@ -6,7 +6,7 @@
 #include "utils.h"
 #include "pic.h"
 #include "pit.h"
-#include "keyboard.h"
+#include <keyboard/keyboard.h>
 #include <memory.h>
 #include <stdbool.h>
 
