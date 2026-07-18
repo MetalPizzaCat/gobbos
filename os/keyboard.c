@@ -1,4 +1,6 @@
 #include "keyboard.h"
+
+
 uint8_t ascii_table[256] = {
 	[0x02] = '1',
 	[0x03] = '2',
@@ -104,6 +106,8 @@ uint8_t shifted_ascii_table[256] = {
 	[0x35] = '?',
 	[0x39] = ' ',
 };
+
+bool g_key_states[KEY_CODE_COUNT];
 
 uint8_t keycode_to_ascii(enum Keycode kc, uint8_t is_shifted)
 {
