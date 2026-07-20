@@ -9,6 +9,7 @@
 #include <keyboard/keyboard.h>
 #include <memory.h>
 #include <stdbool.h>
+#include "game.h"
 
 #define GDT_ATTRIBUTE_PRESENT (1 << 7)
 #define GDT_ATTRIBUTE_USER (1 << 4)					  // 1 for user descriptors (code and data), 0 for system descriptors and call gates
@@ -42,8 +43,6 @@
 		.reserved = 0,                                                 \
 	}
 
-__attribute__((section(".limine_requests"))) extern struct limine_framebuffer_request fb_request;
-
 #define TIMER_FREQUENCY 100
 #define UPDATE_TIME 1 / TIMER_FREQUENCY
 
@@ -68,9 +67,7 @@ typedef struct
 	uint32_t reserved;
 } __attribute__((packed)) InterruptGate;
 
-
-
-
+extern GameTableEntry g_current_game_handlers;
 
 // Halt and catch fire function.
 static void hcf(void)
@@ -91,11 +88,7 @@ typedef struct
 
 __attribute__((interrupt)) void timer_handler(InterruptFrame *frame);
 
-
-
 __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame);
-
-
 
 __attribute__((interrupt)) void mouse_handler(InterruptFrame *frame);
 

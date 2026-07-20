@@ -1,6 +1,5 @@
 #include "keyboard.h"
 
-
 uint8_t ascii_table[256] = {
 	[0x02] = '1',
 	[0x03] = '2',
@@ -109,6 +108,8 @@ uint8_t shifted_ascii_table[256] = {
 
 bool g_key_states[KEY_CODE_COUNT];
 
+bool g_key_states_previous[KEY_CODE_COUNT];
+
 uint8_t keycode_to_ascii(enum Keycode kc, uint8_t is_shifted)
 {
 	if (is_shifted)
@@ -122,4 +123,19 @@ enum Keycode scancode_to_keycode(uint8_t sc)
 {
 	sc &= 0b01111111; // remove released
 	return (enum Keycode)sc;
+}
+
+bool is_key_pressed(enum Keycode kc)
+{
+	return g_key_states[kc];
+}
+
+bool is_key_just_pressed(enum Keycode kc)
+{
+	return g_key_states[kc] && !g_key_states_previous[kc];
+}
+
+bool is_key_just_released(enum Keycode kc)
+{
+	return !g_key_states[kc] && g_key_states_previous[kc];
 }

@@ -114,11 +114,16 @@ enum Keycode
 	KC_RIGHT_GUI,
 };
 
-
-
-
 #define KEY_CODE_COUNT KC_RIGHT_GUI + 1
 uint8_t keycode_to_ascii(enum Keycode kc, uint8_t is_shifted);
 enum Keycode scancode_to_keycode(uint8_t sc);
 
 extern bool g_key_states[KEY_CODE_COUNT];
+
+extern bool g_key_states_previous[KEY_CODE_COUNT];
+
+bool is_key_pressed(enum Keycode kc);
+
+bool is_key_just_pressed(enum Keycode kc);
+
+bool is_key_just_released(enum Keycode kc);

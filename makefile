@@ -41,7 +41,9 @@ OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/keyboard/keyboard.c.o \
 					$(BUILD_DIR)/kernel/os/pit.c.o \
 					$(BUILD_DIR)/kernel/os/pic.c.o \
+					$(BUILD_DIR)/kernel/graphics/graphics.c.o \
 					$(BUILD_DIR)/std/memory.c.o \
+					$(BUILD_DIR)/games/invaders/invaders.c.o \
 
 
 
@@ -69,8 +71,10 @@ $(BOOT_FILES_DIR)/kernel: $(OBJ_FILES)
 paths:
 	mkdir -p ./$(BUILD_DIR)/kernel/os
 	mkdir -p ./$(BUILD_DIR)/kernel/keyboard
+	mkdir -p ./$(BUILD_DIR)/kernel/graphics
 	mkdir -p ./$(BUILD_DIR)/std
 	mkdir -p ./$(BUILD_DIR)/games
+	mkdir -p ./$(BUILD_DIR)/games/invaders
 
 build: paths elf-image $(BOOT_FILES_DIR)/kernel
 	mcopy -i $(ELF_OUTPUT_DIR)/efi-image $(BOOT_FILES_DIR)/kernel ::/
