@@ -1,8 +1,8 @@
-#include "invaders.h"
+#include "invaders.hpp"
 
-#include <graphics/graphics.h>
+#include <graphics/graphics.hpp>
 #include <stdbool.h>
-#include <os/os.h>
+#include <os/os.hpp>
 
 #define INVADER_ALIEN_CELL_WIDTH 16
 #define INVADER_ALIEN_CELL_HEIGHT 24

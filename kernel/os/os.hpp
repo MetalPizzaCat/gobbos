@@ -4,12 +4,12 @@
 #include "limine.h"
 #include <stddef.h>
 #include "utils.h"
-#include "pic.h"
-#include "pit.h"
-#include <keyboard/keyboard.h>
-#include <memory.h>
+#include "pic.hpp"
+#include "pit.hpp"
+#include <keyboard/keyboard.hpp>
+#include <memory.hpp>
 #include <stdbool.h>
-#include "game.h"
+#include "game.hpp"
 
 #define GDT_ATTRIBUTE_PRESENT (1 << 7)
 #define GDT_ATTRIBUTE_USER (1 << 4)					  // 1 for user descriptors (code and data), 0 for system descriptors and call gates
@@ -86,18 +86,18 @@ typedef struct
 	uint64_t ss;
 } InterruptFrame;
 
-__attribute__((interrupt)) void timer_handler(InterruptFrame *frame);
+extern "C" __attribute__((interrupt)) void timer_handler(InterruptFrame *frame);
 
-__attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame);
+extern "C" __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame);
 
-__attribute__((interrupt)) void mouse_handler(InterruptFrame *frame);
+extern "C" __attribute__((interrupt)) void mouse_handler(InterruptFrame *frame);
 
-__attribute__((interrupt)) void irq7_15_spurious(InterruptFrame *frame);
+extern "C" __attribute__((interrupt)) void irq7_15_spurious(InterruptFrame *frame);
 
 void main();
 
 /// The actual main function of the os, however for the sake of simplicity i chose to hide and provide a more standard main
 /// This is meant to setup all the internal logic while main should be dealing with game specific setups and menus ig?
-void kmain();
+extern "C" void kmain();
 
 #endif

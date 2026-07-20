@@ -36,14 +36,14 @@ CFLAGS := -Wall \
 
 
 OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
-					$(BUILD_DIR)/kernel/main.c.o \
-					$(BUILD_DIR)/kernel/os/os.c.o \
-					$(BUILD_DIR)/kernel/keyboard/keyboard.c.o \
-					$(BUILD_DIR)/kernel/os/pit.c.o \
-					$(BUILD_DIR)/kernel/os/pic.c.o \
-					$(BUILD_DIR)/kernel/graphics/graphics.c.o \
-					$(BUILD_DIR)/std/memory.c.o \
-					$(BUILD_DIR)/games/invaders/invaders.c.o \
+					$(BUILD_DIR)/kernel/main.cpp.o \
+					$(BUILD_DIR)/kernel/os/os.cpp.o \
+					$(BUILD_DIR)/kernel/keyboard/keyboard.cpp.o \
+					$(BUILD_DIR)/kernel/os/pit.cpp.o \
+					$(BUILD_DIR)/kernel/os/pic.cpp.o \
+					$(BUILD_DIR)/kernel/graphics/graphics.cpp.o \
+					$(BUILD_DIR)/std/memory.cpp.o \
+					$(BUILD_DIR)/games/invaders/invaders.cpp.o \
 
 
 
@@ -60,7 +60,7 @@ elf-image:
 $(BUILD_DIR)/%.asm.o: $(SOURCE_DIR)/%.asm
 	fasm $< $@
 
-$(BUILD_DIR)/%.c.o: $(SOURCE_DIR)/%.c
+$(BUILD_DIR)/%.cpp.o: $(SOURCE_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 

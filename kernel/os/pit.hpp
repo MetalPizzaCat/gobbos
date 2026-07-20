@@ -1,5 +1,6 @@
 #pragma once
-
+#include <stddef.h>
+#include <stdint.h>
 // https://wiki.osdev.org/Programmable_Interval_Timer
 #define PIT_FREQUENCY 1193182 // magic intell number
 #define PIT_CHANNEL_0 0x40

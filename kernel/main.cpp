@@ -1,7 +1,7 @@
 
-#include <os/os.h>
-#include <memory.h>
-#include "../games/invaders/invaders.h"
+#include <os/os.hpp>
+#include <memory.hpp>
+#include "../games/invaders/invaders.hpp"
 
 void update_game_logic(void);
 

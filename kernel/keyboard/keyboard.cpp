@@ -1,4 +1,4 @@
-#include "keyboard.h"
+#include "keyboard.hpp"
 
 uint8_t ascii_table[256] = {
 	[0x02] = '1',

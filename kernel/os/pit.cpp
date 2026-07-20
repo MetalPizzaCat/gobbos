@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include "pit.h"
+#include "pit.hpp"
 #include "utils.h"
 
 void pit_set_timer(uint16_t hertz)

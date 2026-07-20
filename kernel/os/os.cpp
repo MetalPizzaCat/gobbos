@@ -1,4 +1,4 @@
-#include "os.h"
+#include "os.hpp"
 extern bool g_key_states[KEY_CODE_COUNT];
 
 GameTableEntry g_current_game_handlers = {.handle_input = NULL, .handle_update = NULL, .init = NULL};
@@ -20,7 +20,7 @@ __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 	return;
 }
 
-__attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame)
+ __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame)
 {
 	uint8_t scancode = inb(0x60);
 

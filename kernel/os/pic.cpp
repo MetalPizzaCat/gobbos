@@ -1,4 +1,4 @@
-#include "pic.h"
+#include "pic.hpp"
 #include <stdint.h>
 #include "utils.h"
 void pic_remap(int offset1, int offset2)
