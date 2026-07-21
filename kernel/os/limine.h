@@ -200,11 +200,17 @@ struct limine_framebuffer_response {
     LIMINE_PTR(struct limine_framebuffer **) framebuffers;
 };
 
+using LimineFramebufferResponse = struct limine_framebuffer_response;
+
 struct limine_framebuffer_request {
     uint64_t id[4];
     uint64_t revision;
     LIMINE_PTR(struct limine_framebuffer_response *) response;
 };
+
+using LimineFramebufferRequest = struct limine_framebuffer_request;
+
+using LimineFramebuffer = struct limine_framebuffer;
 
 /* Flanterm FB init params */
 

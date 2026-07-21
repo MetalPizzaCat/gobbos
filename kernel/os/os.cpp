@@ -1,15 +1,12 @@
 #include "os.hpp"
-extern bool g_key_states[KEY_CODE_COUNT];
-
-GameTableEntry g_current_game_handlers = {.handle_input = NULL, .handle_update = NULL, .init = NULL};
 
 __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 {
 	static uint32_t ms;
 	ms += UPDATE_TIME;
-	if (g_current_game_handlers.handle_update != NULL)
+	if (GameManager::getInstance().getUpdateHandler() != nullptr)
 	{
-		g_current_game_handlers.handle_update();
+		GameManager::getInstance().getUpdateHandler()();
 	}
 	// update_game_logic();
 	if (ms > UPDATE_TIME * 1000)
@@ -20,15 +17,17 @@ __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 	return;
 }
 
- __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame)
+__attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame)
 {
+
+	using namespace os::keyboard;
 	uint8_t scancode = inb(0x60);
 
-	g_key_states_previous[scancode_to_keycode(scancode)] = g_key_states[scancode_to_keycode(scancode)];
-	g_key_states[scancode_to_keycode(scancode)] = !(bool)(scancode & 0b10000000);
-	if (g_current_game_handlers.handle_input != NULL)
+	GlobalKeyboard::getInstance().setPreviousKeyState(scancodeToKeycode(scancode), GlobalKeyboard::getInstance().isKeyPressed(scancodeToKeycode(scancode)));
+	GlobalKeyboard::getInstance().setKeyState(scancodeToKeycode(scancode), !(bool)(scancode & 0b10000000));
+	if (GameManager::getInstance().getUpdateHandler() != nullptr)
 	{
-		g_current_game_handlers.handle_input();
+		GameManager::getInstance().getUpdateHandler()();
 	}
 	pic_send_eoi(1);
 }
@@ -132,7 +131,6 @@ void kmain()
 	pic_mask(pic_mask1 & 0x00ff, (pic_mask1 & 0xff00) >> 16);
 	enable_interrupts();
 
-	memset(g_key_states, false, sizeof(g_key_states) / sizeof(bool));
 
 	main();
 	hcf();

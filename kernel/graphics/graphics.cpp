@@ -6,26 +6,31 @@ __attribute__((section(".limine_requests"))) struct limine_framebuffer_request f
 	.id = LIMINE_FRAMEBUFFER_REQUEST_ID,
 };
 
-void clear_screen(Color color)
+
+os::graphics::Graphics::Graphics() : m_limineFramebufferResponse(framebuffer_request.response), m_framebuffer(framebuffer_request.response->framebuffers[0])
 {
-	// pixel access is `offset = (y * pitch) + (x * bpp / 8)`
-
-	// assuming that buffer is 32bit but ideally we shouldn't
-
-	struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
-	mempattern4(
-		(color.r << framebuffer->red_mask_shift) |
-			(color.g << framebuffer->green_mask_shift) |
-			(color.b << framebuffer->blue_mask_shift),
-		framebuffer->address, framebuffer->width * framebuffer->height);
 }
 
-void draw_rect(Rectangle rect, Color color)
+void os::graphics::Graphics::clearScreen(Color color)
 {
-	struct limine_framebuffer *framebuffer = framebuffer_request.response->framebuffers[0];
-	uint32_t c = (color.r << framebuffer->red_mask_shift) | (color.g << framebuffer->green_mask_shift) | (color.b << framebuffer->blue_mask_shift);
+	mempattern<uint32_t>(
+		(color.r << m_framebuffer->red_mask_shift) |
+			(color.g << m_framebuffer->green_mask_shift) |
+			(color.b << m_framebuffer->blue_mask_shift),
+		m_framebuffer->address, m_framebuffer->width * m_framebuffer->height);
+}
+
+void os::graphics::Graphics::fillRect(Rect rect, Color color)
+{
+	uint32_t c = (color.r << m_framebuffer->red_mask_shift) | (color.g << m_framebuffer->green_mask_shift) | (color.b << m_framebuffer->blue_mask_shift);
 	for (uint32_t h = 0; h < rect.h; h++)
 	{
-		mempattern4(c, (uint8_t *)framebuffer->address + ((rect.y + h) * framebuffer->pitch) + (rect.x * framebuffer->bpp / 8), rect.w);
+		mempattern(c, (uint8_t *)m_framebuffer->address + ((rect.y + h) * m_framebuffer->pitch) + (rect.x * m_framebuffer->bpp / 8), rect.w);
 	}
 }
+
+os::graphics::Color::Color(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b)
+{
+}
+
+

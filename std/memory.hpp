@@ -2,13 +2,19 @@
 #include <stdint.h>
 #include <stddef.h>
 
-/**
- * @brief Copy pattern `patt` `size` times into the dst. Total amount of bytes copied will be `4 * size`
- *
- * @param patt
- * @param dst
- * @param size
- */
-void mempattern4(uint32_t patt, void *dst, size_t size);
+/// @brief Copy value `patt` `n` times in memory
+/// @tparam T
+/// @param patt Value to repeat in memory. While any type can be used the target type is intergers
+/// @param dst Destination array in which to put the memory. Array is assumed to be at least `sizeof(T) * n` bytes long.
+/// @param n
+template <typename T>
+void mempattern(T patt, void *dst, size_t n)
+{
+	T *dst_mem = (T *)dst;
+	for (size_t i = 0; i < n; i++, dst_mem += 1)
+	{
+		*dst_mem = patt;
+	}
+}
 
-void *memset(void *dst, uint8_t v, size_t c);
+extern "C" void *memset(void *dst, uint8_t v, size_t c);

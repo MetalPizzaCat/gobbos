@@ -59,7 +59,7 @@ void update_game_logic()
 /// This is the "main" main, which will just be running a menu and switch between games
 void main()
 {
-	invaders_init_game();
-	g_current_game_handlers.handle_input = invaders_handle_input;
-	g_current_game_handlers.handle_update = invaders_update_game_logic;
+	Games::Invaders::init();
+	GameManager::getInstance().setInputHandler(Games::Invaders::handleInput);
+	GameManager::getInstance().setUpdateHandler(Games::Invaders::updateGameLogic);
 }

@@ -30,6 +30,7 @@ CFLAGS := -Wall \
     -mno-red-zone \
     -mcmodel=kernel \
     -target x86_64-unknown-none-elf \
+	-fno-threadsafe-statics \
 	-g \
 	-I $(STD_DIR) \
 	-I kernel

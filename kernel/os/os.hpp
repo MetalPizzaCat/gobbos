@@ -46,7 +46,7 @@
 #define TIMER_FREQUENCY 100
 #define UPDATE_TIME 1 / TIMER_FREQUENCY
 
-typedef struct
+__attribute__((packed)) struct UserDescriptor
 {
 	uint16_t limit_low;
 	uint16_t base_low;
@@ -54,9 +54,9 @@ typedef struct
 	uint8_t attributes;
 	uint8_t flags_limit;
 	uint8_t base_high;
-} __attribute__((packed)) UserDescriptor;
+};
 
-typedef struct
+__attribute__((packed)) typedef struct InterruptGate
 {
 	uint16_t target_offset_low;
 	uint16_t target_selector;
@@ -65,9 +65,43 @@ typedef struct
 	uint16_t target_offset_mid;
 	uint32_t target_offset_high;
 	uint32_t reserved;
-} __attribute__((packed)) InterruptGate;
+};
 
-extern GameTableEntry g_current_game_handlers;
+using GameHandlerFunctionType = void (*)(void);
+
+class GameManager
+{
+public:
+	static GameManager &getInstance()
+	{
+		static GameManager manager;
+		return manager;
+	}
+
+	GameHandlerFunctionType getUpdateHandler() const
+	{
+		return this->m_updateHandler;
+	}
+	GameHandlerFunctionType getInputHandler() const
+	{
+
+		return this->m_inputHandler;
+	}
+
+	void setInputHandler(GameHandlerFunctionType handler)
+	{
+		m_inputHandler = handler;
+	}
+
+	void setUpdateHandler(GameHandlerFunctionType handler)
+	{
+		m_updateHandler = handler;
+	}
+
+private:
+	GameHandlerFunctionType m_updateHandler = nullptr;
+	GameHandlerFunctionType m_inputHandler = nullptr;
+};
 
 // Halt and catch fire function.
 static void hcf(void)
@@ -77,14 +111,14 @@ static void hcf(void)
 		asm("hlt");
 	}
 }
-typedef struct
+struct InterruptFrame
 {
 	uint64_t rip;
 	uint64_t cs;
 	uint64_t rflags;
 	uint64_t rsp;
 	uint64_t ss;
-} InterruptFrame;
+};
 
 extern "C" __attribute__((interrupt)) void timer_handler(InterruptFrame *frame);
 
