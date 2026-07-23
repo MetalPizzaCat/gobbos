@@ -26,12 +26,12 @@ void Games::Invaders::GameState::init()
 	// TODO: Adjust sized for each alien
 	for (int i = 0; i < 12; i++)
 	{
-		m_aliens[alien_i++] = Object(Rect(
-										 i * constants::alienCellWidth * constants::alienGameScale + start_x,
-										 start_y,
-										 8 * constants::alienGameScale,
-										 8 * constants::alienGameScale),
-									 0);
+		m_aliens[alien_i++] = Alien(Rect(
+										i * constants::alienCellWidth * constants::alienGameScale + start_x,
+										start_y,
+										8 * constants::alienGameScale,
+										8 * constants::alienGameScale),
+									0);
 	}
 
 	for (int j = 0; j < 2; j++)
@@ -40,12 +40,12 @@ void Games::Invaders::GameState::init()
 		for (int i = 0; i < 12; i++)
 		{
 
-			m_aliens[alien_i++] = Object(Rect(
-											 i * constants::alienCellWidth * constants::alienGameScale + start_x,
-											 start_y,
-											 8 * constants::alienGameScale,
-											 8 * constants::alienGameScale),
-										 1);
+			m_aliens[alien_i++] = Alien(Rect(
+											i * constants::alienCellWidth * constants::alienGameScale + start_x,
+											start_y,
+											8 * constants::alienGameScale,
+											8 * constants::alienGameScale),
+										1);
 		}
 	}
 	for (int j = 0; j < 2; j++)
@@ -53,12 +53,12 @@ void Games::Invaders::GameState::init()
 		start_y += INVADER_ALIEN_CELL_HEIGHT * INVADER_ALIEN_SCALE;
 		for (int i = 0; i < 12; i++)
 		{
-			m_aliens[alien_i++] = Object(Rect(
-											 i * constants::alienCellWidth * constants::alienGameScale + start_x,
-											 start_y,
-											 8 * constants::alienGameScale,
-											 8 * constants::alienGameScale),
-										 2);
+			m_aliens[alien_i++] = Alien(Rect(
+											i * constants::alienCellWidth * constants::alienGameScale + start_x,
+											start_y,
+											8 * constants::alienGameScale,
+											8 * constants::alienGameScale),
+										2);
 		}
 	}
 }
@@ -76,7 +76,7 @@ void Games::Invaders::GameState::update()
 	{
 		for (int j = 0; j < 12; j++)
 		{
-			Object &alien = m_aliens[i * 12 + j];
+			Alien &alien = m_aliens[i * 12 + j];
 			if (alien.isDead())
 			{
 				continue;

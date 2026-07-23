@@ -20,15 +20,23 @@ namespace Games::Invaders
 		explicit Object() = default;
 		explicit Object(Rect collision, Color color) : m_collision(collision), m_color(color) {}
 
-		explicit Object(Rect collision, uint8_t type) : m_collision(collision), m_color(255, 0, 0) {}
-		void draw();
-
-		inline bool isDead() const { return m_dead; }
+		virtual void draw();
 
 	private:
 		Rect m_collision;
 		bool m_drawDebugCollision;
 		Color m_color;
+	};
+
+	class Alien : public Object
+	{
+	public:
+		explicit Alien() = default;
+		explicit Alien(Rect collision, uint8_t type) : Object(collision, Color(255, 0, 0)) {}
+		inline bool isDead() const { return m_dead; }
+
+
+	private:
 		bool m_dead = false;
 		uint8_t m_type;
 	};
@@ -50,7 +58,7 @@ namespace Games::Invaders
 		void handleInput();
 
 	private:
-		Object m_aliens[5 * 12];
+		Alien m_aliens[5 * 12];
 		Object m_player;
 		uint32_t m_alienMoveTime = 1;
 		uint32_t m_alienTimeSinceLastMove = 0;
