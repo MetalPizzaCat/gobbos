@@ -1,4 +1,6 @@
 #include "os.hpp"
+#include <os/heap.hpp>
+#include <graphics/graphics.hpp>
 
 __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 {
@@ -86,6 +88,18 @@ __attribute__((aligned(16))) UserDescriptor gdt[3] = {
 
 __attribute__((aligned(16))) InterruptGate idt[64] = {0};
 
+void panic_with_message(const char *msg)
+{
+	os::graphics::Graphics::getInstance().clearScreen(os::graphics::Color(0, 255, 0));
+	// TODO: Add message display
+	panic();
+}
+
+void panic()
+{
+	hcf();
+}
+
 void kmain()
 {
 
@@ -131,7 +145,7 @@ void kmain()
 	pic_mask(pic_mask1 & 0x00ff, (pic_mask1 & 0xff00) >> 16);
 	enable_interrupts();
 
-
+	os::memory::HeapInfo::getInstance().initLargestHeap();
 	main();
 	hcf();
 }

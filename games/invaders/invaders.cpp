@@ -18,7 +18,7 @@ void Games::Invaders::GameState::init()
 	uint32_t start_x = constants::alienCellWidth * 3 * constants::alienGameScale;
 	uint32_t start_y = constants::alienCellHeight * constants::alienGameScale;
 
-	m_player = Object(
+	m_player =Object(
 		Rect(Graphics::getInstance().getScreenSize().x / 2, constants::alienCellWidth * 9 * constants::alienGameScale, 16, 8),
 		Color(255, 255, 255));
 
@@ -72,6 +72,9 @@ void Games::Invaders::GameState::update()
 	}
 	Graphics::getInstance().clearScreen(Color(0, 0, 0));
 	m_player.draw();
+
+	Object *boinky = new Object(Rect(0, 0, 200, 200), Color(0, 0, 255));
+	boinky->draw();
 	for (int i = 0; i < 5; i++)
 	{
 		for (int j = 0; j < 12; j++)
@@ -84,6 +87,7 @@ void Games::Invaders::GameState::update()
 			alien.draw();
 		}
 	}
+	delete boinky;
 }
 void Games::Invaders::GameState::handleInput()
 {

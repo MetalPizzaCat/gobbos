@@ -120,6 +120,12 @@ struct InterruptFrame
 	uint64_t ss;
 };
 
+/// Display error message and halt all execution. A green screen will be displayed
+/// @param msg Message to display
+extern "C" void panic_with_message(const char *msg);
+
+extern "C" void panic();
+
 extern "C" __attribute__((interrupt)) void timer_handler(InterruptFrame *frame);
 
 extern "C" __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame);

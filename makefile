@@ -31,6 +31,7 @@ CFLAGS := -Wall \
     -mcmodel=kernel \
     -target x86_64-unknown-none-elf \
 	-fno-threadsafe-statics \
+	-fno-exceptions \
 	-g \
 	-I $(STD_DIR) \
 	-I kernel
@@ -39,6 +40,7 @@ CFLAGS := -Wall \
 OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/main.cpp.o \
 					$(BUILD_DIR)/kernel/os/os.cpp.o \
+					$(BUILD_DIR)/kernel/os/heap.cpp.o \
 					$(BUILD_DIR)/kernel/keyboard/keyboard.cpp.o \
 					$(BUILD_DIR)/kernel/os/pit.cpp.o \
 					$(BUILD_DIR)/kernel/os/pic.cpp.o \
@@ -47,6 +49,7 @@ OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/games/invaders/invaders.cpp.o \
 					$(BUILD_DIR)/std/typeinfo.cpp.o \
 					$(BUILD_DIR)/std/new.cpp.o \
+					$(BUILD_DIR)/std/exception.cpp.o \
 
 
 

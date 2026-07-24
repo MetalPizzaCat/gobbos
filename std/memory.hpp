@@ -17,4 +17,10 @@ void mempattern(T patt, void *dst, size_t n)
 	}
 }
 
+extern "C" void *malloc(size_t size);
+
 extern "C" void *memset(void *dst, uint8_t v, size_t c);
+
+extern "C" void free(void *ptr);
+
+void *mallocAligned(uint64_t size, uint64_t alignment);

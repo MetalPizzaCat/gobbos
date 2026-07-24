@@ -4,11 +4,11 @@
 #include <memory.hpp>
 uint8_t os::keyboard::keycodeToAscii(Keycode kc, uint8_t isShifted)
 {
-	if (isShifted)
-	{
-		return shifted_ascii_table[kc];
-	}
-	return ascii_table[kc];
+	// if (isShifted)
+	// {
+	// 	return shifted_ascii_table[kc];
+	// }
+	// return ascii_table[kc];
 }
 
 os::keyboard::Keycode os::keyboard::scancodeToKeycode(uint8_t sc)

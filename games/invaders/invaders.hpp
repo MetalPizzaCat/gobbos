@@ -35,7 +35,6 @@ namespace Games::Invaders
 		explicit Alien(Rect collision, uint8_t type) : Object(collision, Color(255, 0, 0)) {}
 		inline bool isDead() const { return m_dead; }
 
-
 	private:
 		bool m_dead = false;
 		uint8_t m_type;
@@ -56,6 +55,7 @@ namespace Games::Invaders
 		void update();
 
 		void handleInput();
+
 
 	private:
 		Alien m_aliens[5 * 12];
