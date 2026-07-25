@@ -40,6 +40,8 @@ CFLAGS := -Wall \
 OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/main.cpp.o \
 					$(BUILD_DIR)/kernel/os/os.cpp.o \
+					$(BUILD_DIR)/kernel/os/serial.cpp.o \
+					$(BUILD_DIR)/kernel/os/io.cpp.o \
 					$(BUILD_DIR)/kernel/os/heap.cpp.o \
 					$(BUILD_DIR)/kernel/keyboard/keyboard.cpp.o \
 					$(BUILD_DIR)/kernel/os/pit.cpp.o \

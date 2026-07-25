@@ -1,7 +1,7 @@
 #include "os.hpp"
 #include <os/heap.hpp>
 #include <graphics/graphics.hpp>
-
+#include "serial.hpp"
 __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 {
 	static uint32_t ms;
@@ -144,6 +144,10 @@ void kmain()
 
 	pic_mask(pic_mask1 & 0x00ff, (pic_mask1 & 0xff00) >> 16);
 	enable_interrupts();
+
+	os::serial::Serial::getInstance().init();
+	os::serial::Serial::getInstance().clear();
+	os::serial::Serial::getInstance().writeCString("Goblins are the best!");
 
 	os::memory::HeapInfo::getInstance().initLargestHeap();
 	main();
