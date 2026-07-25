@@ -13,7 +13,7 @@ void *operator new(size_t size)
 		size = 1;
 	// if (p == nullptr)
 	// 	__throw_bad_alloc_shim();
-	void *r = malloc(size);
+	void *r = mallocAligned(size, 16);
 	if (r == nullptr)
 	{
 		panic_with_message("Bad memory allocation");

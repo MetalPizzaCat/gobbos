@@ -72,59 +72,51 @@ void free(void *ptr)
 
 void *mallocAligned(uint64_t size, uint64_t alignment)
 {
-	using namespace os::memory;
-	BlockHeader *current = HeapInfo::getInstance().getRoot();
+    using namespace os::memory;
+    BlockHeader *current = HeapInfo::getInstance().getRoot();
 
-	if (size == 0)
-	{
-		return NULL;
-	}
+    if (size == 0)
+    {
+        return NULL;
+    }
 
-	while (current != NULL)
-	{
-		if (!current->free)
-		{
-			current = current->next;
-			continue;
-		}
-		if (current->size < size)
-		{
-			current = current->next;
-			continue;
-		}
+    while (current != NULL)
+    {
+        if (current->free == 0)
+        {
+            current = current->next;
+            continue;
+        }
 
-		uint64_t block_start = (uint64_t)(current + 1);
-		uint64_t aligned_start = (block_start + alignment - 1) & ~(alignment - 1);
-		uint64_t padding = aligned_start - block_start;
+        uint64_t block_start = (uint64_t)(current + 1);
+        uint64_t aligned_start = (block_start + alignment - 1) & ~(alignment - 1);
+        uint64_t padding = aligned_start - block_start;
+        uint64_t total_size = size + padding;
 
-		if (current->size < size + padding)
-		{
-			current = current->next;
-			continue;
-		}
+        if (current->size < total_size)
+        {
+            current = current->next;
+            continue;
+        }
 
-		if (padding < sizeof(BlockHeader))
-		{
-			current = current->next;
-			continue;
-		}
+        if (padding > 0) {
+            if (padding < sizeof(BlockHeader)) {
+                current = current->next;
+                continue;
+            }
 
-		if (padding > sizeof(BlockHeader))
-		{
-			split(current, padding - sizeof(BlockHeader));
-			current = current->next;
-		}
+            split(current, padding - sizeof(BlockHeader));
+            continue;
+        }
 
-		if (current->size > (size + sizeof(BlockHeader)) * 2)
-		{
-			split(current, size);
-			current->free = 0;
-			return (void *)(current + 1);
-		}
+        if (current->size > (size + sizeof(BlockHeader)) * 2)
+        {
+            split(current, size);
+        }
 
-		current->free = 0;
-		return (void *)(current + 1);
-	}
+        current->free = 0;
+        return (void *)(current + 1);
+    }
 
-	return NULL;
+    return NULL;
 }
