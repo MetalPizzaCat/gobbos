@@ -7,6 +7,11 @@ void operator delete(void *ptr) noexcept
 	// std::free(ptr);
 }
 
+void operator delete[](void *ptr) noexcept
+{
+	::operator delete(ptr);
+}
+
 void *operator new(size_t size)
 {
 	if (size == 0)
@@ -19,6 +24,11 @@ void *operator new(size_t size)
 		panic_with_message("Bad memory allocation");
 	}
 	return r;
+}
+
+void *operator new[](size_t size)
+{
+	return ::operator new(size);
 }
 
 static void *operator_new_impl(size_t size)

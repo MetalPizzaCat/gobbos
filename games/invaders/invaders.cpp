@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <os/os.hpp>
 #include <keyboard/keyboard.hpp>
+#include <string.hpp>
+#include <os/io.hpp>
 
 #define INVADER_ALIEN_CELL_WIDTH 16
 #define INVADER_ALIEN_CELL_HEIGHT 24
@@ -15,10 +17,16 @@ void Games::Invaders::Object::draw()
 }
 void Games::Invaders::GameState::init()
 {
+
+	std::string hello("Space invasion begins!\n");
+	os::io::log(hello.c_str());
+	hello.push_back('a');
+	os::io::log(hello.c_str());
+
 	uint32_t start_x = constants::alienCellWidth * 3 * constants::alienGameScale;
 	uint32_t start_y = constants::alienCellHeight * constants::alienGameScale;
 
-	m_player =Object(
+	m_player = Object(
 		Rect(Graphics::getInstance().getScreenSize().x / 2, constants::alienCellWidth * 9 * constants::alienGameScale, 16, 8),
 		Color(255, 255, 255));
 

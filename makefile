@@ -52,6 +52,8 @@ OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/std/typeinfo.cpp.o \
 					$(BUILD_DIR)/std/new.cpp.o \
 					$(BUILD_DIR)/std/exception.cpp.o \
+					$(BUILD_DIR)/std/string.cpp.o \
+					$(BUILD_DIR)/std/cxa_virtual.cpp.o \
 
 
 
