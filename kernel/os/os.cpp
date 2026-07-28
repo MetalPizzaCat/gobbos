@@ -67,6 +67,29 @@ __attribute__((interrupt)) void irq7_15_spurious(InterruptFrame *frame)
 	return;
 }
 
+__attribute__((interrupt)) void exceptionDivideByZeroError(InterruptFrame *frame) { panic_with_message("Attempted to divide by zero"); }
+__attribute__((interrupt)) void exceptionDebug(InterruptFrame *frame) { panic_with_message("Debug exception"); }
+__attribute__((interrupt)) void exceptionNonMaskableInterrupt(InterruptFrame *frame) { panic_with_message("Non maskable interrupt"); }
+__attribute__((interrupt)) void exceptionBreakpoint(InterruptFrame *frame) { panic_with_message("Breakpoint triggered"); }
+__attribute__((interrupt)) void exceptionOverflow(InterruptFrame *frame) { panic_with_message("Overflow error"); }
+__attribute__((interrupt)) void exceptionBoundRange(InterruptFrame *frame) { panic_with_message("Range error"); }
+__attribute__((interrupt)) void exceptionInvalidOpcode(InterruptFrame *frame) { panic_with_message("Invalid opcode"); }
+__attribute__((interrupt)) void exceptionDeviceNotAvailable(InterruptFrame *frame) { panic_with_message("Device not available"); }
+__attribute__((interrupt)) void exceptionDoubleFault(InterruptFrame *frame) { panic_with_message("Double fault"); }
+__attribute__((interrupt)) void exceptionInvalidTss(InterruptFrame *frame) { panic_with_message("Invalid task state segment"); }
+__attribute__((interrupt)) void exceptionSegmentNotPresent(InterruptFrame *frame) { panic_with_message("Segment not present"); }
+__attribute__((interrupt)) void exceptionStack(InterruptFrame *frame) { panic_with_message("Stack error"); }
+__attribute__((interrupt)) void exceptionGeneralProtection(InterruptFrame *frame) { panic_with_message("General protection"); }
+__attribute__((interrupt)) void exceptionPageFault(InterruptFrame *frame) { panic_with_message("Page fault"); }
+__attribute__((interrupt)) void exception87FloatingPointExceptionPending(InterruptFrame *frame) { panic_with_message("x87 Floating point exception"); }
+__attribute__((interrupt)) void exceptionAlignmentCheck(InterruptFrame *frame) { panic_with_message("Misaligned memory"); }
+__attribute__((interrupt)) void exceptionMachineCheck(InterruptFrame *frame) { panic_with_message("Machine check"); }
+__attribute__((interrupt)) void exceptionSimdFloatingPoint(InterruptFrame *frame) { panic_with_message("SIMD floating point"); }
+__attribute__((interrupt)) void exceptionControlProtectionException(InterruptFrame *frame) { panic_with_message("Control protection"); }
+__attribute__((interrupt)) void exceptionHypervisorInjectionException(InterruptFrame *frame) { panic_with_message("Hypervisor injection"); }
+__attribute__((interrupt)) void exceptionVmmCommunicationException(InterruptFrame *frame) { panic_with_message("VMM Communication event"); }
+__attribute__((interrupt)) void exceptionSecurityException(InterruptFrame *frame) { panic_with_message("Host security exception"); }
+
 __attribute__((aligned(16))) UserDescriptor gdt[3] = {
 	{0}, // null descriptor
 	{
@@ -91,6 +114,7 @@ __attribute__((aligned(16))) InterruptGate idt[64] = {0};
 void panic_with_message(const char *msg)
 {
 	os::graphics::Graphics::getInstance().clearScreen(os::graphics::Color(0, 255, 0));
+	os::serial::Serial::getInstance().writeCString(msg);
 	// TODO: Add message display
 	panic();
 }
@@ -127,6 +151,30 @@ void kmain()
 	// pit_set_timer(100);
 	pit_set_timer(30);
 
+	idt[0] = (InterruptGate)make_interrupt(0x8, exceptionDivideByZeroError);
+	idt[1] = (InterruptGate)make_interrupt(0x8, exceptionDebug);
+	idt[2] = (InterruptGate)make_interrupt(0x8, exceptionNonMaskableInterrupt);
+	idt[3] = (InterruptGate)make_interrupt(0x8, exceptionBreakpoint);
+	idt[4] = (InterruptGate)make_interrupt(0x8, exceptionOverflow);
+	idt[5] = (InterruptGate)make_interrupt(0x8, exceptionBoundRange);
+	idt[6] = (InterruptGate)make_interrupt(0x8, exceptionInvalidOpcode);
+	idt[7] = (InterruptGate)make_interrupt(0x8, exceptionDeviceNotAvailable);
+	idt[8] = (InterruptGate)make_interrupt(0x8, exceptionDoubleFault);
+	idt[10] = (InterruptGate)make_interrupt(0x8, exceptionInvalidTss);
+	idt[11] = (InterruptGate)make_interrupt(0x8, exceptionSegmentNotPresent);
+	idt[12] = (InterruptGate)make_interrupt(0x8, exceptionStack);
+	idt[13] = (InterruptGate)make_interrupt(0x8, exceptionGeneralProtection);
+	idt[14] = (InterruptGate)make_interrupt(0x8, exceptionPageFault);
+	idt[16] = (InterruptGate)make_interrupt(0x8, exception87FloatingPointExceptionPending);
+	idt[17] = (InterruptGate)make_interrupt(0x8, exceptionAlignmentCheck);
+	idt[18] = (InterruptGate)make_interrupt(0x8, exceptionMachineCheck);
+	idt[19] = (InterruptGate)make_interrupt(0x8, exceptionSimdFloatingPoint);
+	idt[21] = (InterruptGate)make_interrupt(0x8, exceptionControlProtectionException);
+	idt[28] = (InterruptGate)make_interrupt(0x8, exceptionHypervisorInjectionException);
+	idt[29] = (InterruptGate)make_interrupt(0x8, exceptionVmmCommunicationException);
+	idt[30] = (InterruptGate)make_interrupt(0x8, exceptionSecurityException);
+
+	
 	idt[32 + 0] = (InterruptGate)make_interrupt(0x8, timer_handler);
 	idt[32 + 1] = (InterruptGate)make_interrupt(0x8, keyboard_handler);
 	idt[32 + 7] = (InterruptGate)make_interrupt(0x8, irq7_15_spurious);
