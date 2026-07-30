@@ -48,3 +48,23 @@ os::graphics::Texture *os::graphics::Texture::fromBmp(uint8_t *dataStart, uint8_
 
 	return new Texture(dataStart + *offset, header->width, header->height, true);
 }
+
+void os::graphics::Texture::update(uint8_t *data)
+{
+	if (!m_holdingUniqueData)
+	{
+		uint8_t *tmp = m_data;
+		m_data = new uint8_t[getDataSize()];
+		memcpy(m_data, data, getDataSize());
+		return;
+	}
+	memcpy(m_data, data, getDataSize());
+}
+
+os::graphics::Texture::~Texture()
+{
+	if (m_holdingUniqueData)
+	{
+		delete[] m_data;
+	}
+}
