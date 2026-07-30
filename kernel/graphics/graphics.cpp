@@ -6,7 +6,6 @@ __attribute__((section(".limine_requests"))) struct limine_framebuffer_request f
 	.id = LIMINE_FRAMEBUFFER_REQUEST_ID,
 };
 
-
 os::graphics::Graphics::Graphics() : m_limineFramebufferResponse(framebuffer_request.response), m_framebuffer(framebuffer_request.response->framebuffers[0])
 {
 }
@@ -29,8 +28,27 @@ void os::graphics::Graphics::fillRect(Rect rect, Color color)
 	}
 }
 
+void os::graphics::Graphics::drawTexture(Texture const *texture, Vec2i pos, Rect *sourceRect)
+{
+	if (texture == nullptr)
+	{
+		return;
+	}
+	// memcpy((uint8_t *)m_framebuffer->address + pos.x + (pos.y + 0) * m_framebuffer->pitch, texture->getData(), 4 * texture->getWidth() + 0 * texture->getWidth() * 4);
+
+	for (uint64_t y = 0; y < texture->getHeight(); y++)
+	{
+		if (pos.y + y > m_framebuffer->height)
+		{
+			continue;
+		}
+		uint64_t yAdjusted = texture->isUpsideDown() ? (texture->getHeight() - y - 1) : y;
+		// mempattern(*reinterpret_cast<uint32_t *>(texture->getData()) & 0x00FF0000, (uint8_t *)m_framebuffer->address + pos.x * 4 + (pos.y + y) * m_framebuffer->pitch, texture->getWidth());
+		memcpy((uint8_t *)m_framebuffer->address + pos.x * 4 + (pos.y + y) * m_framebuffer->pitch, texture->getData() + yAdjusted * texture->getWidth() * 4, 4 * texture->getWidth());
+		//  memcpy((uint8_t *)m_framebuffer->address + pos.x + (pos.y + y) * m_framebuffer->pitch, texture->getData() + y * 4 * texture->getWidth(), 4 * texture->getWidth() + y * texture->getWidth() * 4);
+	}
+}
+
 os::graphics::Color::Color(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b)
 {
 }
-
-

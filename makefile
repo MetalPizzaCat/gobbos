@@ -37,6 +37,13 @@ CFLAGS := -Wall \
 	-I kernel
 
 
+IMAGE_OBJ_FILES := $(BUILD_DIR)/assets/vga_font_dos.bmp.o\
+					$(BUILD_DIR)/assets/vga_font_dos_test.bmp.o\
+					$(BUILD_DIR)/assets/colortest.bmp.o\
+					$(BUILD_DIR)/assets/checker_pattern.bmp.o
+
+ASSET_DIR := assets
+
 OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/main.cpp.o \
 					$(BUILD_DIR)/kernel/os/os.cpp.o \
@@ -47,6 +54,9 @@ OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/os/pit.cpp.o \
 					$(BUILD_DIR)/kernel/os/pic.cpp.o \
 					$(BUILD_DIR)/kernel/graphics/graphics.cpp.o \
+					$(BUILD_DIR)/kernel/graphics/font.cpp.o \
+					$(BUILD_DIR)/kernel/graphics/texture.cpp.o \
+					$(BUILD_DIR)/kernel/graphics/sprite.cpp.o \
 					$(BUILD_DIR)/std/memory.cpp.o \
 					$(BUILD_DIR)/games/invaders/invaders.cpp.o \
 					$(BUILD_DIR)/std/typeinfo.cpp.o \
@@ -73,10 +83,13 @@ $(BUILD_DIR)/%.asm.o: $(SOURCE_DIR)/%.asm
 $(BUILD_DIR)/%.cpp.o: $(SOURCE_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(BUILD_DIR)/assets/%.bmp.o: $(ASSET_DIR)/%.bmp
+	objcopy -I binary -O elf64-x86-64 $< $@
 
 
-$(BOOT_FILES_DIR)/kernel: $(OBJ_FILES)
-	ld -T linker.lds $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 
+
+$(BOOT_FILES_DIR)/kernel: $(OBJ_FILES) $(IMAGE_OBJ_FILES)
+	ld -T linker.lds  $(IMAGE_OBJ_FILES) $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 
 
 paths:
 	mkdir -p ./$(BUILD_DIR)/kernel/os
@@ -85,6 +98,7 @@ paths:
 	mkdir -p ./$(BUILD_DIR)/std
 	mkdir -p ./$(BUILD_DIR)/games
 	mkdir -p ./$(BUILD_DIR)/games/invaders
+	mkdir -p ./$(BUILD_DIR)/assets/
 
 build: paths elf-image $(BOOT_FILES_DIR)/kernel
 	mcopy -i $(ELF_OUTPUT_DIR)/efi-image $(BOOT_FILES_DIR)/kernel ::/

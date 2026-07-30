@@ -2,64 +2,39 @@
 #include <os/os.hpp>
 #include <memory.hpp>
 #include "../games/invaders/invaders.hpp"
-
+#include <graphics/texture.hpp>
+#include <graphics/graphics.hpp>
 void update_game_logic(void);
 
-// void set_fb(uint8_t value)
-// {
-// 	struct limine_framebuffer *framebuffer = fb_request.response->framebuffers[0];
+extern uint8_t _binary_assets_vga_font_dos_bmp_start;
+extern uint8_t _binary_assets_vga_font_dos_bmp_end;
 
-// 	for (size_t y = 0; y < framebuffer->height; y++)
-// 	{
-// 		for (size_t x = 0; x < framebuffer->width * (framebuffer->bpp / 8); x++)
-// 		{
-// 			((uint8_t *)framebuffer->address)[x + y * framebuffer->pitch] = value;
-// 		}
-// 	}
-// }
+extern uint8_t _binary_assets_vga_font_dos_test_bmp_start;
+extern uint8_t _binary_assets_vga_font_dos_test_bmp_end;
 
-struct
-{
-	uint32_t x;
-	uint32_t y;
-	uint32_t w;
-	uint32_t h;
-} g_player;
+extern uint8_t _binary_assets_colortest_bmp_start;
+extern uint8_t _binary_assets_colortest_bmp_end;
 
-void update_game_logic()
-{
-	// clear_framebuffer(0, 0, 0);
-	// blit_color_rect(255, 0, 0, g_player.w, g_player.h, g_player.x, g_player.y);
-	// if (g_key_states[KC_W])
-	// {
-	// 	g_player.y -= 10;
-	// 	g_player.y %= (800 - g_player.h);
-	// }
-	// if (g_key_states[KC_S])
-	// {
-	// 	g_player.y += 10;
-	// 	g_player.y %= (800 - g_player.h);
-	// }
-	// if (g_key_states[KC_D])
-	// {
-	// 	g_player.x += 10;
-	// 	g_player.x %= (1280 - g_player.w);
-	// }
-	// if (g_key_states[KC_A])
-	// {
-	// 	g_player.x -= 10;
-	// 	g_player.x %= (1280 - g_player.w);
-	// }
-	// else
-	// {
-	// 	clear_framebuffer(0, 0, 0);
-	// }
-}
-
+extern uint8_t _binary_assets_checker_pattern_bmp_start;
+extern uint8_t _binary_assets_checker_pattern_bmp_end;
 /// This is the "main" main, which will just be running a menu and switch between games
 void main()
 {
-	Games::Invaders::init();
-	GameManager::getInstance().setInputHandler(Games::Invaders::handleInput);
-	GameManager::getInstance().setUpdateHandler(Games::Invaders::updateGameLogic);
+	using namespace os::graphics;
+
+
+	Texture *fontmap = Texture::fromBmp(&_binary_assets_vga_font_dos_bmp_start, &_binary_assets_vga_font_dos_bmp_end);
+	//Texture *fontmap = Texture::fromBmp(&_binary_assets_checker_pattern_bmp_start, &_binary_assets_checker_pattern_bmp_end);
+	//Texture *fontmap = Texture::fromBmp(&_binary_assets_colortest_bmp_start, &_binary_assets_colortest_bmp_end);
+	Graphics::getInstance().clearScreen(Color(0, 0, 0));
+	if (!fontmap)
+	{
+		panic_with_message("Failed to load fontmap");
+	}
+	Graphics::getInstance().drawTexture(fontmap, Vec2i(64, 33));
+	hcf();
+	delete fontmap;
+	// Games::Invaders::init();
+	// GameManager::getInstance().setInputHandler(Games::Invaders::handleInput);
+	// GameManager::getInstance().setUpdateHandler(Games::Invaders::updateGameLogic);
 }

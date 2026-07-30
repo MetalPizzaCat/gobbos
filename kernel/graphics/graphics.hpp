@@ -4,6 +4,7 @@
 #include <os/limine.h>
 #include <geometry/rect.hpp>
 #include <geometry/point.hpp>
+#include <graphics/texture.hpp>
 
 //__attribute__((section(".limine_requests"))) extern struct limine_framebuffer_request fb_request;
 
@@ -45,7 +46,15 @@ namespace os::graphics
 		/// @param color Color of the rectangle
 		void fillRect(Rect rect, Color color);
 
-		Vec2i getScreenSize() const { return Vec2i(m_framebuffer->width, m_framebuffer->height); }
+		/// @brief Draw the texture on screen. No alpha channel calculation is performed, image will override all pixels
+		/// @param pos Location on the screen to draw texture at
+		/// @param sourceRect Section of the texture to draw or full texture if it's null
+		void drawTexture(Texture const *texture, Vec2i pos, Rect *sourceRect = nullptr);
+
+		Vec2i getScreenSize() const
+		{
+			return Vec2i(m_framebuffer->width, m_framebuffer->height);
+		}
 
 	private:
 		LimineFramebuffer *m_framebuffer;
