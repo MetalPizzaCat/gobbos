@@ -15,8 +15,17 @@ namespace os::graphics
 		/// @brief Create new instance of an image object stored in the Bitmap format. Currently bitmap is assumed to be in 32bit ARGB format
 		/// @param dataStart Pointer to the start of the memory block that contains the bitmap
 		/// @param dataEnd Pointer to the end of the memory block that contains the bitmap
-		/// @return
+		/// @return Pointer to the newly created texture
 		static Texture *fromBmp(uint8_t *dataStart, uint8_t *dataEnd);
+
+
+		/// @brief Create new instance of an image object stored in the Gob format. Even more simplified alternative to bitmap
+		/// @param dataStart Pointer to the start of the memory block that contains the image data
+		/// @param dataEnd Pointer to the end of the memory block that contains the image data
+		/// @return
+		static Texture *fromGob(uint8_t *dataStart, uint8_t *dataEnd);
+
+		
 		uint8_t *getData() const { return m_data; }
 
 		uint64_t getWidth() const { return m_width; }

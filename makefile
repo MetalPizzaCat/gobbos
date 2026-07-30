@@ -37,8 +37,7 @@ CFLAGS := -Wall \
 	-I kernel
 
 
-IMAGE_OBJ_FILES := $(BUILD_DIR)/assets/vga_font_dos.bmp.o\
-					$(BUILD_DIR)/assets/vga_font_dos_test.bmp.o\
+IMAGE_OBJ_FILES := $(BUILD_DIR)/assets/vga_font_dos.gob.o\
 					$(BUILD_DIR)/assets/colortest.bmp.o\
 					$(BUILD_DIR)/assets/checker_pattern.bmp.o
 
@@ -86,7 +85,8 @@ $(BUILD_DIR)/%.cpp.o: $(SOURCE_DIR)/%.cpp
 $(BUILD_DIR)/assets/%.bmp.o: $(ASSET_DIR)/%.bmp
 	objcopy -I binary -O elf64-x86-64 $< $@
 
-
+$(BUILD_DIR)/assets/%.gob.o: $(ASSET_DIR)/%.gob
+	objcopy -I binary -O elf64-x86-64 $< $@
 
 $(BOOT_FILES_DIR)/kernel: $(OBJ_FILES) $(IMAGE_OBJ_FILES)
 	ld -T linker.lds  $(IMAGE_OBJ_FILES) $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 

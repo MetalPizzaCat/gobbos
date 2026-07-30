@@ -3,8 +3,7 @@ extern "C" uint8_t _binary_assets_vga_font_dos_bmp_start;
 extern "C" uint8_t _binary_assets_vga_font_dos_bmp_end;
 
 os::font::FontManager::FontManager() : m_default(Font(
-										   &_binary_assets_vga_font_dos_bmp_start,
-										   &_binary_assets_vga_font_dos_bmp_end - &_binary_assets_vga_font_dos_bmp_start, 32, 12, 21))
+										   nullptr, 0, 32, 12, 21))
 {
 }
 

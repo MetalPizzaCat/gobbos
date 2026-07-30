@@ -1,6 +1,6 @@
 #include "texture.hpp"
 #include <os/os.hpp>
-#include <graphics/bitmap.hpp>
+#include <graphics/imagetype.hpp>
 os::graphics::Texture::Texture(uint8_t *dataStart,
 							   uint64_t width,
 							   uint64_t height,
@@ -9,6 +9,17 @@ os::graphics::Texture::Texture(uint8_t *dataStart,
 												  m_height(height),
 												  m_upsideDown(upsideDown)
 {
+}
+
+os::graphics::Texture *os::graphics::Texture::fromGob(uint8_t *dataStart, uint8_t *dataEnd)
+{
+	if (dataStart[0] != 'G' || dataStart[1] != 'O' || dataStart[2] != 'B' || dataStart[3] != 'I')
+	{
+		return nullptr;
+	}
+
+	GobImageHeader *header = reinterpret_cast<GobImageHeader *>(dataStart);
+	return new Texture(dataStart + sizeof(GobImageHeader) + 1, header->width, header->height, false);
 }
 
 os::graphics::Texture *os::graphics::Texture::fromBmp(uint8_t *dataStart, uint8_t *dataEnd)
