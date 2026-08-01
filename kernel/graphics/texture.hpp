@@ -2,15 +2,18 @@
 
 #include <stdint.h>
 #include <stddef.h>
+
 namespace os::graphics
 {
 	class Texture
 	{
 	public:
-		/// @brief Load image data from two pointers
-		/// @param dataStart
-		/// @param dataEnd
-		explicit Texture(uint8_t *dataStart, uint64_t width, uint64_t height, bool upsideDown = false);
+		
+		explicit Texture(uint8_t *dataStart, uint64_t width, uint64_t height, bool upsideDown = false, bool uniqueData = false);
+
+		/// @brief Create empty texture(filled with 0x00000000) of a given size. Will always have unique newly allocated data
+		/// @param size Size of the texture
+		explicit Texture(uint64_t width, uint64_t height);
 
 		/// @brief Create new instance of an image object stored in the Bitmap format. Currently bitmap is assumed to be in 32bit ARGB format
 		/// @param dataStart Pointer to the start of the memory block that contains the bitmap
@@ -28,12 +31,13 @@ namespace os::graphics
 		/// @return Pointer to the inner data
 		uint8_t *getData() const { return m_data; }
 
+
 		uint64_t getWidth() const { return m_width; }
 		uint64_t getHeight() const { return m_height; }
 
 		bool isUpsideDown() const { return m_upsideDown; }
 
-		/// @brief Update current pixel data with new values. Data will be copied into the memory so sizes must match. 
+		/// @brief Update current pixel data with new values. Data will be copied into the memory so sizes must match.
 		/// @param data
 		void update(uint8_t *data);
 

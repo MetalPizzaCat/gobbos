@@ -56,6 +56,7 @@ OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/graphics/font.cpp.o \
 					$(BUILD_DIR)/kernel/graphics/texture.cpp.o \
 					$(BUILD_DIR)/kernel/graphics/sprite.cpp.o \
+					$(BUILD_DIR)/kernel/graphics/text.cpp.o \
 					$(BUILD_DIR)/std/memory.cpp.o \
 					$(BUILD_DIR)/games/invaders/invaders.cpp.o \
 					$(BUILD_DIR)/std/typeinfo.cpp.o \

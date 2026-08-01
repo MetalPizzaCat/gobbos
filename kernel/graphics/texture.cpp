@@ -4,11 +4,18 @@
 os::graphics::Texture::Texture(uint8_t *dataStart,
 							   uint64_t width,
 							   uint64_t height,
-							   bool upsideDown) : m_data(dataStart),
+							   bool upsideDown,
+							   bool uniqueData) : m_data(dataStart),
 												  m_width(width),
 												  m_height(height),
-												  m_upsideDown(upsideDown)
+												  m_upsideDown(upsideDown),
+												  m_holdingUniqueData(uniqueData)
 {
+}
+
+os::graphics::Texture::Texture(uint64_t width, uint64_t height) : m_upsideDown(false), m_holdingUniqueData(true), m_width(width), m_height(height)
+{
+	m_data = new uint8_t[width * height * 4];
 }
 
 os::graphics::Texture *os::graphics::Texture::fromGob(uint8_t *dataStart, uint8_t *dataEnd)
