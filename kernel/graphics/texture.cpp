@@ -1,5 +1,6 @@
 #include "texture.hpp"
 #include <os/os.hpp>
+#include <math.hpp>
 #include <graphics/imagetype.hpp>
 os::graphics::Texture::Texture(uint8_t *dataStart,
 							   uint64_t width,
@@ -66,6 +67,34 @@ void os::graphics::Texture::update(uint8_t *data)
 		return;
 	}
 	memcpy(m_data, data, getDataSize());
+}
+
+void os::graphics::Texture::resize(std::geometry::Vec2i newSize)
+{
+	uint8_t *newData = new uint8_t[newSize.x * newSize.y * 4];
+
+	for (uint64_t x = 0; x < newSize.x; x++)
+	{
+		for (uint64_t y = 0; y < newSize.y; y++)
+		{
+			uint64_t srcX = min<uint64_t>((double)x / (double)newSize.x * (double)m_width, m_width - 1);
+			uint64_t srcY = min<uint64_t>((double)y / (double)newSize.y * (double)m_height, m_height - 1);
+
+			for (int i = 0; i < 4; i++)
+			{
+				newData[i + x * 4 + y * 4 * newSize.x] = m_data[i + srcX * 4 + srcY * 4 * m_width];
+			}
+		}
+	}
+
+	if (m_holdingUniqueData)
+	{
+		delete m_data;
+	}
+
+	m_data = newData;
+	m_width = newSize.x;
+	m_height = newSize.y;
 }
 
 os::graphics::Texture::~Texture()

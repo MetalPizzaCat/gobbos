@@ -3,7 +3,7 @@
 #include <graphics/graphics.hpp>
 #include <memory.hpp>
 
-os::graphics::Text::Text(Font const *font) : m_font(font) {}
+os::graphics::Text::Text(Font const *font) : m_font(font), m_resultTexture(nullptr), m_lineSpacing(1) {}
 
 void os::graphics::Text::setText(std::string const &text)
 {

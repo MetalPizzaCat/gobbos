@@ -17,3 +17,5 @@ extern "C" void load_gdt(TableRegister *gdtr);
 extern "C" void load_idt(TableRegister *idtr);
 extern "C" void set_data_segment(uint16_t ds);
 extern "C" void set_code_segment(uint16_t cs);
+
+extern "C" void enable_sse();

@@ -2,6 +2,7 @@
 #include <os/heap.hpp>
 #include <graphics/graphics.hpp>
 #include "serial.hpp"
+
 __attribute__((interrupt)) void timer_handler(InterruptFrame *frame)
 {
 	static uint32_t ms;
@@ -174,7 +175,6 @@ void kmain()
 	idt[29] = (InterruptGate)make_interrupt(0x8, exceptionVmmCommunicationException);
 	idt[30] = (InterruptGate)make_interrupt(0x8, exceptionSecurityException);
 
-	
 	idt[32 + 0] = (InterruptGate)make_interrupt(0x8, timer_handler);
 	idt[32 + 1] = (InterruptGate)make_interrupt(0x8, keyboard_handler);
 	idt[32 + 7] = (InterruptGate)make_interrupt(0x8, irq7_15_spurious);
@@ -192,6 +192,8 @@ void kmain()
 
 	pic_mask(pic_mask1 & 0x00ff, (pic_mask1 & 0xff00) >> 16);
 	enable_interrupts();
+
+	enable_sse();
 
 	os::serial::Serial::getInstance().init();
 	os::serial::Serial::getInstance().clear();

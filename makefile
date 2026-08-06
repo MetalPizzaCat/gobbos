@@ -11,7 +11,8 @@ BOOT_FILES_DIR := boot/
 STD_DIR := std/
 
 CC := clang
-CFLAGS := -Wall \
+
+CFLAGS_CORE := -Wall \
     -Wextra \
     -ffreestanding \
     -fno-stack-protector \
@@ -23,10 +24,7 @@ CFLAGS := -Wall \
     -m64 \
     -march=x86-64 \
     -mabi=sysv \
-    -mno-80387 \
     -mno-mmx \
-    -mno-sse \
-    -mno-sse2 \
     -mno-red-zone \
     -mcmodel=kernel \
     -target x86_64-unknown-none-elf \
@@ -36,6 +34,11 @@ CFLAGS := -Wall \
 	-I $(STD_DIR) \
 	-I kernel
 
+CFLAGS_OS := $(CFLAGS_CORE) -mno-sse -mno-sse2 -mno-80387 
+
+CFLAGS := $(CFLAGS_CORE)
+    
+
 
 IMAGE_OBJ_FILES := $(BUILD_DIR)/assets/vga_font_dos.gob.o\
 					$(BUILD_DIR)/assets/colortest.bmp.o\
@@ -43,9 +46,10 @@ IMAGE_OBJ_FILES := $(BUILD_DIR)/assets/vga_font_dos.gob.o\
 
 ASSET_DIR := assets
 
+CORE_OBJ_FILES := $(BUILD_DIR)/kernel/os/os.cpp.co
+
 OBJ_FILES :=  $(BUILD_DIR)/kernel/os/utils.asm.o \
 					$(BUILD_DIR)/kernel/main.cpp.o \
-					$(BUILD_DIR)/kernel/os/os.cpp.o \
 					$(BUILD_DIR)/kernel/os/serial.cpp.o \
 					$(BUILD_DIR)/kernel/os/io.cpp.o \
 					$(BUILD_DIR)/kernel/os/heap.cpp.o \
@@ -83,14 +87,17 @@ $(BUILD_DIR)/%.asm.o: $(SOURCE_DIR)/%.asm
 $(BUILD_DIR)/%.cpp.o: $(SOURCE_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+$(BUILD_DIR)/%.cpp.co: $(SOURCE_DIR)/%.cpp
+	$(CC) $(CFLAGS_OS) -c -o $@ $<
+
 $(BUILD_DIR)/assets/%.bmp.o: $(ASSET_DIR)/%.bmp
 	objcopy -I binary -O elf64-x86-64 $< $@
 
 $(BUILD_DIR)/assets/%.gob.o: $(ASSET_DIR)/%.gob
 	objcopy -I binary -O elf64-x86-64 $< $@
 
-$(BOOT_FILES_DIR)/kernel: $(OBJ_FILES) $(IMAGE_OBJ_FILES)
-	ld -T linker.lds  $(IMAGE_OBJ_FILES) $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 
+$(BOOT_FILES_DIR)/kernel: $(CORE_OBJ_FILES) $(OBJ_FILES) $(IMAGE_OBJ_FILES)
+	ld -T linker.lds  $(IMAGE_OBJ_FILES) $(CORE_OBJ_FILES) $(OBJ_FILES) -o $(BOOT_FILES_DIR)/kernel -nostdlib 
 
 paths:
 	mkdir -p ./$(BUILD_DIR)/kernel/os

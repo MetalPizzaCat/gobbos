@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+#include <geometry/point.hpp>
 
 namespace os::graphics
 {
@@ -40,6 +41,10 @@ namespace os::graphics
 		/// @brief Update current pixel data with new values. Data will be copied into the memory so sizes must match.
 		/// @param data
 		void update(uint8_t *data);
+
+		/// @brief Resize the image using nearest-neighbour scaling. Note that the data will be copied into the texture if it wasn't previously using unique data
+		/// @param newSize
+		void resize(std::geometry::Vec2i newSize);
 
 		size_t getDataSize() const { return m_width * m_height * 4; }
 
