@@ -6,6 +6,7 @@
 #include <keyboard/keyboard.hpp>
 #include <string.hpp>
 #include <os/io.hpp>
+#include <math.hpp>
 
 #define INVADER_ALIEN_CELL_WIDTH 16
 #define INVADER_ALIEN_CELL_HEIGHT 24
@@ -15,19 +16,30 @@ void Games::Invaders::Object::draw()
 {
 	Graphics::getInstance().fillRect(m_collision, m_color);
 }
+
+void Games::Invaders::Object::setPosition(Vec2i position)
+{
+	m_collision.x = position.x;
+	m_collision.y = position.y;
+}
+
+std::geometry::Vec2i Games::Invaders::Object::getPosition() const
+{
+	return std::geometry::Vec2i(m_collision.x, m_collision.y);
+}
+
+std::geometry::Vec2i Games::Invaders::Object::getSize() const
+{
+	return std::geometry::Vec2i(m_collision.w, m_collision.h);
+}
 void Games::Invaders::GameState::init()
 {
-
-	std::string hello("Space invasion begins!\n");
-	os::io::log(hello.c_str());
-	hello.push_back('a');
-	os::io::log(hello.c_str());
 
 	uint32_t start_x = constants::alienCellWidth * 3 * constants::alienGameScale;
 	uint32_t start_y = constants::alienCellHeight * constants::alienGameScale;
 
 	m_player = Object(
-		Rect(Graphics::getInstance().getScreenSize().x / 2, constants::alienCellWidth * 9 * constants::alienGameScale, 16, 8),
+		Rect(Graphics::getInstance().getScreenSize().x / 2, Graphics::getInstance().getScreenSize().y - 64, 16, 8),
 		Color(255, 255, 255));
 
 	int alien_i = 0;
@@ -73,49 +85,54 @@ void Games::Invaders::GameState::init()
 
 void Games::Invaders::GameState::update()
 {
-	m_alienTimeSinceLastMove += UPDATE_TIME;
-	if (m_alienTimeSinceLastMove > m_alienMoveTime)
+	m_alienTimeSinceLastMove += (float)UPDATE_TIME;
+	if (m_alienTimeSinceLastMove > m_alienMoveTime || true)
 	{
 		m_alienTimeSinceLastMove = 0;
+
+		for (int i = 0; i < 5 * 12; i++)
+		{
+			m_aliens[i].setPosition(Vec2i(m_aliens[i].getPosition().x + (m_movingLeft ? -1 : 1), m_aliens[i].getPosition().y + 8 * m_moveDownOnNextTurn));
+		}
+		if (m_moveDownOnNextTurn)
+		{
+			m_moveDownOnNextTurn = false;
+		}
 	}
 	Graphics::getInstance().clearScreen(Color(0, 0, 0));
 	m_player.draw();
 
-	Object *boinky = new Object(Rect(0, 0, 200, 200), Color(0, 0, 255));
-	boinky->draw();
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 5 * 12; i++)
 	{
-		for (int j = 0; j < 12; j++)
+		Alien &alien = m_aliens[i];
+
+		if (alien.isDead())
 		{
-			Alien &alien = m_aliens[i * 12 + j];
-			if (alien.isDead())
-			{
-				continue;
-			}
-			alien.draw();
+			continue;
 		}
+		if (m_aliens[i].getPosition().x <= 0 || (m_aliens[i].getPosition().x + m_aliens[i].getSize().x) > Graphics::getInstance().getScreenSize().x)
+		{
+			m_moveDownOnNextTurn = true;
+			m_movingLeft = !m_movingLeft;
+		}
+		alien.draw();
 	}
-	delete boinky;
 }
+
 void Games::Invaders::GameState::handleInput()
 {
 	using namespace os::keyboard;
+	Vec2i newPos = m_player.getPosition();
 	if (GlobalKeyboard::getInstance().isKeyPressed(KC_A))
 	{
-		// g_invaders_game_state.player.collision.x -= 5;
-		// if (g_invaders_game_state.player.collision.x < 0)
-		// {
-		// 	g_invaders_game_state.player.collision.x = 0;
-		// }
+		newPos.x = max(newPos.x - 5, 0ul);
 	}
 	if (GlobalKeyboard::getInstance().isKeyPressed(KC_D))
 	{
-		// g_invaders_game_state.player.collision.x += 5;
-		// if (g_invaders_game_state.player.collision.x > 640 - g_invaders_game_state.player.collision.w)
-		// {
-		// 	g_invaders_game_state.player.collision.x = 640 - g_invaders_game_state.player.collision.w;
-		// }
+		newPos.x = min(newPos.x + 5, Graphics::getInstance().getScreenSize().x - m_player.getSize().x);
 	}
+
+	m_player.setPosition(newPos);
 	if (GlobalKeyboard::getInstance().isKeyJustPressed(KC_SPACE))
 	{
 	}

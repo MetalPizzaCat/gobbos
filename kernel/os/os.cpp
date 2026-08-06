@@ -28,9 +28,9 @@ __attribute__((interrupt)) void keyboard_handler(InterruptFrame *frame)
 
 	GlobalKeyboard::getInstance().setPreviousKeyState(scancodeToKeycode(scancode), GlobalKeyboard::getInstance().isKeyPressed(scancodeToKeycode(scancode)));
 	GlobalKeyboard::getInstance().setKeyState(scancodeToKeycode(scancode), !(bool)(scancode & 0b10000000));
-	if (GameManager::getInstance().getUpdateHandler() != nullptr)
+	if (GameManager::getInstance().getInputHandler() != nullptr)
 	{
-		GameManager::getInstance().getUpdateHandler()();
+		GameManager::getInstance().getInputHandler()();
 	}
 	pic_send_eoi(1);
 }

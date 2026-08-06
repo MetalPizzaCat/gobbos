@@ -46,6 +46,7 @@
 #define TIMER_FREQUENCY 100
 #define UPDATE_TIME 1 / TIMER_FREQUENCY
 
+
 __attribute__((packed)) struct UserDescriptor
 {
 	uint16_t limit_low;

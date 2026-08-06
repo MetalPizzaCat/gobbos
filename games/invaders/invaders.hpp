@@ -22,6 +22,12 @@ namespace Games::Invaders
 
 		virtual void draw();
 
+		void setPosition(Vec2i position);
+
+		Vec2i getPosition() const;
+
+		Vec2i getSize() const;
+
 	private:
 		Rect m_collision;
 		bool m_drawDebugCollision;
@@ -56,12 +62,13 @@ namespace Games::Invaders
 
 		void handleInput();
 
-
 	private:
 		Alien m_aliens[5 * 12];
 		Object m_player;
-		uint32_t m_alienMoveTime = 1;
-		uint32_t m_alienTimeSinceLastMove = 0;
+		float m_alienMoveTime = 0.1;
+		float m_alienTimeSinceLastMove = 0;
+		bool m_movingLeft = false;
+		bool m_moveDownOnNextTurn = false;
 	};
 
 	void handleInput();
